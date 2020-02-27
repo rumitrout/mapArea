@@ -11,7 +11,8 @@ const store = {
         position: {coord: { lat: 21.1458, lng: 79.0882 }, accuracy: null, marker: ''},
         error: '',
         turfPoints: [],
-        area: null
+        area: null,
+        showResult: false
         
     },
 
@@ -84,7 +85,7 @@ const store = {
             elem,
             defaultLayers.vector.normal.map,
             {
-            zoom: 200,
+            zoom: 15,
             center: this.state.position.coord
             });
         //add interactions and marker events
@@ -118,7 +119,7 @@ const store = {
         let marker = new H.map.Marker(coord, { volatility: true });
         marker.draggable = true;
         this.state.coords.push(coord);
-        this.state.map.addObject(marker);
+        this.state.group.addObject(marker);
     },
     calculateArea() {
         let  coords = [[...this.state.turfPoints]];
@@ -149,10 +150,14 @@ const store = {
         let points = [...this.state.coords, this.state.coords[0]]
         points.map(item => lineString.pushPoint(item));
         this.state.group.removeAll();
-        this.state.group.addObject(new H.map.Polyline(
-            lineString, { style: { lineWidth: 4 }}
-        ));
-        this.calculateArea();
+        try {
+            this.state.group.addObject(new H.map.Polyline(
+                lineString, { style: { lineWidth: 4 }}
+            ));
+            this.calculateArea();
+        } catch(err) {
+            this.error = err.message;
+        }
     },
     setupMapEvents() {
         var mapEvents = new H.mapevents.MapEvents(this.state.map);
