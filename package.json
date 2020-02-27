@@ -7,7 +7,9 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@turf/turf": "^5.1.6",
     "core-js": "^3.6.4",
+    "turf": "^3.0.14",
     "vue": "^2.6.11"
   },
   "devDependencies": {
